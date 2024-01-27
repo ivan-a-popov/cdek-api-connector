@@ -17,7 +17,7 @@ async def check_delivery():
 async def create_delivery(body: DeliveryOrder):
     """Создание заказа на доставку СДЭК"""
     # print(body.from_location.fias_guid)
-    return {"message": "It works!"}
+    return {"message": "The query is OK."}
 
 
 if __name__ == "__main__":

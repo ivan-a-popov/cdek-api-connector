@@ -4,7 +4,7 @@ from typing import List
 from pydantic import BaseModel, Field
 from app.cdek.schemas.location import Location
 from app.cdek.schemas.money import Money, Threshold
-from app.cdek.schemas.contact import Seller
+from app.cdek.schemas.contact import Recipient, Seller
 from app.cdek.schemas.package import Package
 
 
@@ -16,10 +16,11 @@ class Service(BaseModel):
 
 class DeliveryOrder(BaseModel):
     """Модель, описывающая объект доставки"""
-    order_id: int = Field(description='WMS order ID')
     crm_id: int = Field(description='ID заказа в RetaiCRM')
+    number: str = Field(max_length=40, description='WMS order ID')
     tariff_code: int = Field(description='Код тарифа. Подробнее см. приложение 1: ' \
                              'https://api-docs.cdek.ru/29923926.html')    
+    comment: str = Field(default=None, description='Комментарий к заказу')
     shipment_point: str = Field(default='MSK342', max_length=255,
                                 description='Код ПВЗ СДЭК, на который будет производиться ' \
                                     'самостоятельный привоз клиентом. Не может использоваться ' \
@@ -48,10 +49,11 @@ class DeliveryOrder(BaseModel):
                                     'с получателя) в зависимости от суммы заказа. Только для ' \
                                     'заказов "интернет-магазин". Возможно указать несколько ' \
                                     'порогов.')
-    seller: Seller(default=None)
-    # from_location: Location = Field(default=None,
-    #                             description='Адрес отправления. Не может использоваться ' \
-    #                                 'одновременно с shipment_point')
+    seller: Seller = Field(default=None, description='Обязательно, если заказ международный')
+    recipient: Recipient = Field(description='Получатель')
+    from_location: Location = Field(default=None,
+                                description='Адрес отправления. Не может использоваться ' \
+                                    'одновременно с shipment_point')
     to_location: Location = Field(default=None,
                                 description='Адрес получения. Не может использоваться ' \
                                     'одновременно с delivery_point')

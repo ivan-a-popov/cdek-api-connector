@@ -13,7 +13,7 @@ async def check_delivery():
     return {"message": "It works!"}
 
 
-@app.post("/api/sdek", tags=["CDEK"])
+@app.post("/api/cdek/orders", tags=["CDEK"])
 async def create_delivery(body: DeliveryOrder):
     """Создание заказа на доставку СДЭК"""
     # print(body.from_location.fias_guid)

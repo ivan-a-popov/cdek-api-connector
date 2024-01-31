@@ -1,23 +1,16 @@
 """Main application file. All the magic starts here."""
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 import uvicorn
-from app.cdek.schemas.delivery import DeliveryOrder
+from app.routers.cdek import cdek_router
+from app.routers.common import common_router
 
 
 app = FastAPI(title="Delivery Connector API")
+main_router = APIRouter(prefix="/api")
+main_router.include_router(common_router)
+main_router.include_router(cdek_router)
+app.include_router(main_router)
 
-
-@app.get("/api/delivery", tags=["General"])
-async def check_delivery():
-    """Получение информации о доставке"""
-    return {"message": "It works!"}
-
-
-@app.post("/api/cdek/orders", tags=["CDEK"])
-async def create_delivery(body: DeliveryOrder):
-    """Создание заказа на доставку СДЭК"""
-    # print(body.from_location.fias_guid)
-    return {"message": "The query is OK."}
 
 
 if __name__ == "__main__":

@@ -28,8 +28,8 @@ async def test_core():
     """Test function to check DB connenction"""
     async with engine.connect() as connection:
         print("Connected successfully!")
-        # result = await connection.execute(text("select * from customer where firstname = 'Анна'"))
-        result = await connection.execute(text('select * from "deliveryType"'))
+        result = await connection.execute(text('select * from "order" where "DeliveryTypeId" = 21'))
+        # result = await connection.execute(text('select * from "deliveryType"'))
         for row in result:
             print(row)
 

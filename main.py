@@ -12,6 +12,5 @@ main_router.include_router(cdek_router)
 app.include_router(main_router)
 
 
-
 if __name__ == "__main__":
     uvicorn.run("main:app", port=8000, log_level="info", reload=True)

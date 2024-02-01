@@ -53,15 +53,13 @@ class ApiService:
                 log.critical(response.text)
                 raise Exception(f"Failed to refresh token. Status code: {response.status_code}")
 
-    async def make_request(self, method, url, **kwargs):
-        """Get the token and add Authorization header to the request"""
-        token = await self.get_token()
-        headers = kwargs.setdefault("headers", {})
-        headers["Content-Type"] = "application/json"
-        headers["Authorization"] = f"Bearer {token}"
+async def make_request(api, method, url, **kwargs):
+    """Get the token and add Authorization header to the request"""
+    token = await api.get_token()
+    headers = kwargs.setdefault("headers", {})
+    headers["Content-Type"] = "application/json"
+    headers["Authorization"] = f"Bearer {token}"
 
-        # Use httpx.AsyncClient's request method
-        async with httpx.AsyncClient() as client:
-            request = client.build_request(method, url, **kwargs)
-            print(f"Request: {request.method} {request.url} Headers: {request.headers} Body: {request.content}")
-            return await client.request(method, url, **kwargs)
+    # Use httpx.AsyncClient's request method
+    async with httpx.AsyncClient() as client:
+        return await client.request(method, url, **kwargs)

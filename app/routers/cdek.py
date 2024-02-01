@@ -1,8 +1,7 @@
 """CDEK Routers"""
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from app.cdek.schemas.delivery import DeliveryOrder
 from app.cdek.api.order import create_order
-from app.cdek.api.auth import ApiService
 
 cdek_router = APIRouter(prefix="/cdek", tags=["CDEK"])
 

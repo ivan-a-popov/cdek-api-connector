@@ -60,6 +60,5 @@ async def make_request(api, method, url, **kwargs):
     headers["Content-Type"] = "application/json"
     headers["Authorization"] = f"Bearer {token}"
 
-    # Use httpx.AsyncClient's request method
     async with httpx.AsyncClient() as client:
         return await client.request(method, url, **kwargs)

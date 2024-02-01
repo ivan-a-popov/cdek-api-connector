@@ -7,13 +7,13 @@ from app.settings import CDEK_URL, CDEK_ID, CDEK_SECRET
 from app.logger import log
 
 
-class ApiAuth:
+class ApiService:
     """Класс (singleton), обеспечивающий авторизацию и обновление токена"""
     _instance = None
 
     def __new__(cls):
         if not cls._instance:
-            cls._instance = super(ApiAuth, cls).__new__(cls)
+            cls._instance = super(ApiService, cls).__new__(cls)
             cls._instance.token = None
             cls._instance.token_expiration = None
         return cls._instance
@@ -57,8 +57,11 @@ class ApiAuth:
         """Get the token and add Authorization header to the request"""
         token = await self.get_token()
         headers = kwargs.setdefault("headers", {})
+        headers["Content-Type"] = "application/json"
         headers["Authorization"] = f"Bearer {token}"
 
         # Use httpx.AsyncClient's request method
         async with httpx.AsyncClient() as client:
+            request = client.build_request(method, url, **kwargs)
+            print(f"Request: {request.method} {request.url} Headers: {request.headers} Body: {request.content}")
             return await client.request(method, url, **kwargs)

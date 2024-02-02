@@ -10,7 +10,7 @@ from app.cdek.schemas.package import Package
 
 class Service(BaseModel):
     """Дополнительная услуга"""
-    code: int = Field(description='Код дополнительной услуги')
+    code: str = Field(description='Код дополнительной услуги')
     parameter: str = Field(default=None,
                            description='Параметр дополнительной услуги')
 
@@ -44,16 +44,16 @@ class DeliveryOrder(BaseModel):
     delivery_recipient_cost: Money(default=None,
                                    description='Доп. сбор за доставку, которую ИМ берет с ' \
                                     'получателя. Только для заказов "интернет-магазин".')
-    delivery_recipient_cost_adv: Threshold(default=None,
+    delivery_recipient_cost_adv: List[Threshold] = Field(default=None,
                                            description='Доп. сбор за доставку, который ИМ берет ' \
                                     'с получателя) в зависимости от суммы заказа. Только для ' \
                                     'заказов "интернет-магазин". Возможно указать несколько ' \
                                     'порогов.')
     seller: Seller = Field(default=None, description='Обязательно, если заказ международный')
     recipient: Recipient = Field(description='Получатель')
-    from_location: Location = Field(default=None,
-                                description='Адрес отправления. Не может использоваться ' \
-                                    'одновременно с shipment_point')
+    # from_location: Location = Field(default=None,
+                                # description='Адрес отправления. Не может использоваться ' \
+                                    # 'одновременно с shipment_point')
     to_location: Location = Field(default=None,
                                 description='Адрес получения. Не может использоваться ' \
                                     'одновременно с delivery_point')

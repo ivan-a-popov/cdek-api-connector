@@ -1,7 +1,8 @@
 """Database Module"""
 import asyncio
+from typing import Optional
 from sqlalchemy.types import UUID
-from sqlalchemy import MetaData, select, text
+from sqlalchemy import BigInteger, ForeignKey, MetaData, select, text
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column
 from sqlalchemy.ext.asyncio import create_async_engine
 import app.settings as settings
@@ -18,11 +19,12 @@ engine = create_async_engine(
 # async_session = AsyncSession(engine, expire_on_commit=False)
 
 class Cdek(Base):
-    """DB model for delivery object"""
+    """DB model for CDEK"""
     __tablename__ = "cdek_integration"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    cdek_id: Mapped[UUID] = mapped_column(UUID)
-
+    id: Mapped[BigInteger] = mapped_column(ForeignKey("order.id"), primary_key=True)
+    crm_id: Mapped[int] = mapped_column()
+    cdek_id: Mapped[Optional[UUID]] = mapped_column(UUID)
+    # cdek_status: Mapped[Optional[str]] =
 
 async def test_core():
     """Test function to check DB connenction"""

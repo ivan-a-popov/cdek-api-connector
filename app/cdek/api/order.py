@@ -39,12 +39,14 @@ async def check_order(order_id, db: AsyncSession):
     session = db
     result = await session.execute(text(f'select * from "delivery_api" where "id" = {order_id}'))
     row = result.first()
-    print(row)
+    log.info(row)
     response = await make_request(api, "get", f"{CDEK_URL}/orders/{row.ext_id}")
     log.info(response.json())
     status = response.json()['entity']['statuses'][0]['code']
     time = response.json()['entity']['statuses'][0]['date_time']
-    await session.execute(update(Delivery),[{"id": int(order_id), "ext_status": status, "time": time}])
+    await session.execute(update(Delivery),
+                          [{"id": int(order_id), "ext_status": status, "time": time}]
+                          )
     await session.execute(update(Order),[{"id": int(order_id), "managerComment": "Yeah, baby!"}])
     await session.commit()
     return response.json()

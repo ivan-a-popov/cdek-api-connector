@@ -4,13 +4,26 @@ from sqlalchemy.engine import URL
 
 # connect string for the database:
 # "postgresql+asyncpg://app_user:changeme@127.0.0.1:5432/app_db?ssl=disable"
-DATABASE_URL = URL.create(
+DATABASE_IP = "127.0.0.1"
+DATABASE_USER = "app_user"
+DATABASE_PSWD = "changeme"
+DATABASE_NAME = "app_db"
+
+db_async_url = URL.create(
             "postgresql+asyncpg",
-            username="app_user",
-            password="changeme",
-            host="127.0.0.1",
-            database="app_db",
+            username=DATABASE_USER,
+            password=DATABASE_PSWD,
+            host=DATABASE_IP,
+            database=DATABASE_NAME,
             query={"ssl": "disable"},
+)
+
+db_url = URL.create(
+            "postgresql",
+            username=DATABASE_USER,
+            password=DATABASE_PSWD,
+            host=DATABASE_IP,
+            database=DATABASE_NAME,
 )
 
 CDEK_URL = "https://api.edu.cdek.ru/v2"

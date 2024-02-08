@@ -1,6 +1,6 @@
 import asyncio
 from sqlalchemy import select, text
-from app.database.session import engine, metadata
+from database.db import engine, metadata
 
 
 async def test_core():

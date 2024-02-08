@@ -9,7 +9,7 @@ import app.settings as settings
 Base = declarative_base()
 metadata = MetaData()
 engine = create_async_engine(
-        settings.DATABASE_URL,
+        settings.db_async_url,
         future=True,
        # echo=True,
     )

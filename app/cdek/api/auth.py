@@ -3,8 +3,8 @@
 """
 from datetime import datetime, timedelta
 import httpx
-from app.settings import CDEK_URL, CDEK_ID, CDEK_SECRET
-from app.logger import log
+from app.core.settings import CDEK_URL, CDEK_ID, CDEK_SECRET
+from app.core.logger import log
 
 
 class ApiService:

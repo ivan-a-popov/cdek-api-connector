@@ -15,17 +15,18 @@ class Service(BaseModel):
                            description='Параметр дополнительной услуги')
 
 class DeliveryOrder(BaseModel):
-    """Модель, описывающая объект доставки"""
-    crm_id: int = Field(description='ID заказа в RetaiCRM')
-    number: str = Field(max_length=40, description='WMS order ID')
+    """Модель, описывающая объект доставки CDEK"""
+    # crm_id: int = Field(description='ID заказа в RetaiCRM')
+    # wms_id: int = Field(description='WMS order ID')
+    number: str = Field(max_length=40, description='Номер заказа в RetailCRM')
     tariff_code: int = Field(description='Код тарифа. Подробнее см. приложение 1: ' \
                              'https://api-docs.cdek.ru/29923926.html')    
     comment: str = Field(default=None, description='Комментарий к заказу')
-    shipment_point: str = Field(default='MSK342', max_length=255,
+    shipment_point: str = Field(default='MSK2020', max_length=10,
                                 description='Код ПВЗ СДЭК, на который будет производиться ' \
                                     'самостоятельный привоз клиентом. Не может использоваться ' \
                                     'одновременно с from_location')
-    delivery_point: str = Field(default=None, max_length=255,
+    delivery_point: str = Field(default=None, max_length=10,
                                 description='Код офиса СДЭК (ПВЗ/постамата), на который будет ' \
                                     'доставлена посылка (Не может использоваться ' \
                                     'одновременно с to_location)')
@@ -41,11 +42,11 @@ class DeliveryOrder(BaseModel):
                                  description='Адрес грузоотправителя. Только для международных ' \
                                     'заказов с типом "интернет-магазин". Если поле заполнено, ' \
                                     'то заказ автоматически становится международным. ')
-    delivery_recipient_cost: Money(default=None,
-                                   description='Доп. сбор за доставку, которую ИМ берет с ' \
+    delivery_recipient_cost: Money = Field(default=None,
+                                     description='Доп. сбор за доставку, которую ИМ берет с ' \
                                     'получателя. Только для заказов "интернет-магазин".')
     delivery_recipient_cost_adv: List[Threshold] = Field(default=None,
-                                           description='Доп. сбор за доставку, который ИМ берет ' \
+                                    description='Доп. сбор за доставку, который ИМ берет ' \
                                     'с получателя) в зависимости от суммы заказа. Только для ' \
                                     'заказов "интернет-магазин". Возможно указать несколько ' \
                                     'порогов.')
@@ -59,7 +60,7 @@ class DeliveryOrder(BaseModel):
                                     'одновременно с delivery_point')
     services: List[Service] = Field(default=None,
                                 description='Дополнительные услуги')
-    packages: List[Package] = Field(description='Список информации по местам (упаковкам). ' \
-                                    'Количество мест в заказе может быть от 1 до 255')
+    # packages: List[Package] = Field(description='Список информации по местам (упаковкам). ' \
+    #                                 'Количество мест в заказе может быть от 1 до 255')
     print: str = Field(default='barcode', description='Необходимость сформировать печатную ' \
                                      'форму по заказу')

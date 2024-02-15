@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.cdek.schemas.delivery import DeliveryOrder
 from app.cdek.api.order import create_order, check_order
-from app.database.db import get_db
+from app.database.session import get_db
 
 
 cdek_router = APIRouter(prefix="/cdek", tags=["CDEK"])

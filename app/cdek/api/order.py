@@ -1,13 +1,13 @@
 """Модуль взаимодействия с API CDEK"""
 import json
-from sqlalchemy import select, text, update
+from sqlalchemy import text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.models import Delivery
 from app.cdek.schemas.delivery import DeliveryOrder
 from app.cdek.api.auth import ApiService, make_request
-from app.logger import log
-from app.settings import CDEK_URL
-from app.database.db import Order
+from app.core.logger import log
+from app.core.settings import CDEK_URL
+from app.database.reflection import Order
 
 api = ApiService()
 

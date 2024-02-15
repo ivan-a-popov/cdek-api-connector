@@ -1,12 +1,16 @@
+"""Helper functions to quickly check DB queries"""
 import asyncio
 from sqlalchemy import select, text
-from database.db import engine, metadata
+from app.database.session import async_engine
+from app.database.reflection import metadata
 
 
 async def test_core():
     """Test function to check DB connenction"""
-    async with engine.connect() as connection:
-        result = await connection.execute(text('select * from "order" where "DeliveryTypeId" = 21'))
+    async with async_engine.connect() as connection:
+        result = await connection.execute(
+            text('select * from "order" where "DeliveryTypeId" = 25') # 25 = 5post, 21 = CDEK
+            )
     # result = await connection.execute(text('select * from "deliveryType"'))
         for row in result:
             print(row)
@@ -14,7 +18,7 @@ async def test_core():
 
 async def test_orm():
     """Test function to check DB connenction"""
-    async with engine.begin() as conn:
+    async with async_engine.begin() as conn:
         print("Connected successfully!")
 
         # Reflect all tables
@@ -35,5 +39,5 @@ async def test_orm():
 
 
 if __name__ == '__main__':
-    asyncio.run(test_orm())
-    # asyncio.run(test_core())
+    # asyncio.run(test_orm())
+    asyncio.run(test_core())

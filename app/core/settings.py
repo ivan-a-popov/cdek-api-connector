@@ -29,3 +29,6 @@ db_url = URL.create(
 CDEK_URL = "https://api.edu.cdek.ru/v2"
 CDEK_ID = "EMscd6r9JnFiQ3bLoyjJY6eM78JrJceI"
 CDEK_SECRET = "PjLZkKBHEiLK3YsjtNrt3TGNG0ahs3kG"
+
+CRM_API = "YOUR_CRM_API_KEY"
+CRM_URL = "https://example.retailcrm.ru/api/v5"

@@ -33,7 +33,7 @@ async def create_order(q: DeliveryOrder, db: AsyncSession):
     )
     session.add(order)
     await session.commit()
-    return r
+    return order
 
 async def check_order(order_id, db: AsyncSession):
     """Проверить статус заявки на доставку"""
@@ -42,12 +42,15 @@ async def check_order(order_id, db: AsyncSession):
     row = result.first()
     log.info(row)
     response = await make_request(api, "get", f"{CDEK_URL}/orders/{row.tk_id}")
-    log.info(response.json())
-    status = response.json()['entity']['statuses'][0]['code']
-    time = datetime.now() # response.json()['entity']['statuses'][0]['date_time']
-    await session.execute(update(Delivery),
-                          [{"id": int(order_id), "tk_status": status, "updated": time}]
-                          )
+    r = response.json()
+    data = {"id": int(order_id)}
+    data["tk_status"] = r['entity']['statuses'][0]['code']
+    data["updated"] = datetime.now() # response.json()['entity']['statuses'][0]['date_time']
+    if data["tk_status"] == "INVALID":
+        data["errors"] = ",".join(str(element) for element in r['requests'][0]['errors'])
+    else:
+        data["print_file"] = "it will be photo URL here"
+    await session.execute(update(Delivery), [data])
     await session.execute(update(Order),[{"id": int(order_id), "IsUpdated": True}])
     await session.commit()
     return response.json()

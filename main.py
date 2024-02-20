@@ -1,5 +1,5 @@
 """Main application file. All the magic starts here."""
-from fastapi import FastAPI, APIRouter, Request
+from fastapi import FastAPI, APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 import uvicorn
@@ -17,7 +17,8 @@ main_router.include_router(cdek_router)
 app.include_router(main_router)
 
 @app.exception_handler(ValidationError)
-async def validation_exception_handler(request: Request, exc: ValidationError):
+async def validation_exception_handler(exc: ValidationError):
+    """Handle errors"""
     return JSONResponse({"detail": exc.errors()}, status_code=422)
 
 if __name__ == "__main__":

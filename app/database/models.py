@@ -18,4 +18,5 @@ class Delivery(Base):
     tk_status: Mapped[Optional[str]] = mapped_column()
     tk_uuid: Mapped[Optional[UUID]] = mapped_column(UUID)
     updated: Mapped[Optional[datetime]] = mapped_column()
+    errors: Mapped[Optional[str]] = mapped_column()
     print_file: Mapped[Optional[str]] = mapped_column()

@@ -1,7 +1,6 @@
 """34092 -- заказ с адресом
 34078 -- заказ с ПВЗ
 """
-import json
 import re
 from app.core.logger import log
 
@@ -12,7 +11,7 @@ from app.cdek.schemas.delivery import DeliveryOrder
 
 def extract_pvz_id(text):
     """Parce comment trying to find PVZ ID"""
-    pattern = r'ПВЗ ID ([A-Z]{3,6}\d{1,4})'
+    pattern = r'([A-Z]{3,6}\d{1,4})'
     match = re.search(pattern, text)
     if match:
         return match.group(1)
@@ -21,6 +20,7 @@ def extract_pvz_id(text):
 
 
 async def make_package(data, db):
+    """Fill package with items"""
     items = []
     for item in data["order"]["items"]:
         product = {}
@@ -34,12 +34,11 @@ async def make_package(data, db):
     return items
 
 
-
 async def make_delivery(order, db):
     """Prepare DeliveryOrder object"""
     crm_info = await get_crm_info(order.CrmId)
     recipient = {
-        "name": f'{crm_info["order"]["contact"]["firstName"]} {crm_info["order"]["contact"]["lastName"]}',
+        "name": f'{crm_info["order"]["firstName"]} {crm_info["order"]["lastName"]}',
         "phones": crm_info["order"]["contact"]["phones"],
     }
     delivery = DeliveryOrder(

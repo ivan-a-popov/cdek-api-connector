@@ -12,6 +12,7 @@ class Delivery(Base):
     __tablename__ = "delivery_api"
     id: Mapped[BigInteger] = mapped_column(BigInteger, primary_key=True) # ForeignKey('order.id'),
     crm_id: Mapped[int] = mapped_column()
+    number: Mapped[str] = mapped_column()
     tk_name: Mapped[str] = mapped_column()
     tk_id: Mapped[Optional[str]] = mapped_column()
     tk_status: Mapped[Optional[str]] = mapped_column()

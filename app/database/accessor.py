@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.models import Delivery
 from app.cdek.schemas.delivery import DeliveryOrder
-from app.database.reflection import Order
+from app.database.reflection import Order, Product
 from app.core.logger import log
 
 
@@ -29,3 +29,11 @@ async def get_order(order_id, sess: AsyncSession):
         result = await session.execute(stmt)
         order = result.scalars().first()
         return order
+
+async def get_weight(article, sess: AsyncSession):
+    async with sess as session:
+        stmt = select(Product.weight).where(Product.article == article)
+        result = await session.execute(stmt)
+        weight = result.scalars().first()
+        print(weight)
+        return weight

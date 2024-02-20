@@ -1,5 +1,6 @@
 """Модуль взаимодействия с API CDEK"""
 import json
+from datetime import datetime
 from sqlalchemy import text, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.models import Delivery
@@ -13,7 +14,7 @@ api = ApiService()
 
 async def create_order(q: DeliveryOrder, db: AsyncSession):
     """Создать заявку на доставку"""
-    data = q.model_dump(exclude={'crm_id'})
+    data = q.model_dump(exclude={'crm_id', 'wms_id'})
     payload = json.dumps(data, default=str, ensure_ascii=False)
     log.info(payload)
     responce = await make_request(api, "post", f"{CDEK_URL}/orders", content=payload)
@@ -21,15 +22,15 @@ async def create_order(q: DeliveryOrder, db: AsyncSession):
     log.info(r)
     session = db
     order = Delivery(
-        id = int(q.number),
+        id = int(q.wms_id),
         crm_id = q.crm_id,
-        ext_service = "CDEK",
-        ext_id = r['entity']['uuid'],
-        ext_status = r['requests'][0]['state'],
-        ext_uuid = r['requests'][0]['request_uuid'],
-        time = r['requests'][0]['date_time'],
+        number = (q.number),
+        tk_name = "CDEK",
+        tk_id = r['entity']['uuid'],
+        tk_status = r['requests'][0]['state'],
+        tk_uuid = r['requests'][0]['request_uuid'],
+        updated = datetime.now() # r['requests'][0]['date_time']),
     )
-    log.info(order)
     session.add(order)
     await session.commit()
     return r
@@ -40,13 +41,13 @@ async def check_order(order_id, db: AsyncSession):
     result = await session.execute(text(f'select * from "delivery_api" where "id" = {order_id}'))
     row = result.first()
     log.info(row)
-    response = await make_request(api, "get", f"{CDEK_URL}/orders/{row.ext_id}")
+    response = await make_request(api, "get", f"{CDEK_URL}/orders/{row.tk_id}")
     log.info(response.json())
     status = response.json()['entity']['statuses'][0]['code']
-    time = response.json()['entity']['statuses'][0]['date_time']
+    time = datetime.now() # response.json()['entity']['statuses'][0]['date_time']
     await session.execute(update(Delivery),
-                          [{"id": int(order_id), "ext_status": status, "time": time}]
+                          [{"id": int(order_id), "tk_status": status, "updated": time}]
                           )
-    await session.execute(update(Order),[{"id": int(order_id), "managerComment": "Yeah, baby!"}])
+    await session.execute(update(Order),[{"id": int(order_id), "IsUpdated": True}])
     await session.commit()
     return response.json()

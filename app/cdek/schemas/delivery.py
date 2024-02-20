@@ -16,13 +16,13 @@ class Service(BaseModel):
 
 class DeliveryOrder(BaseModel):
     """Модель, описывающая объект доставки CDEK"""
-    # crm_id: int = Field(description='ID заказа в RetaiCRM')
-    # wms_id: int = Field(description='WMS order ID')
+    crm_id: int = Field(description='ID заказа в RetaiCRM')
+    wms_id: int = Field(description='WMS order ID')
     number: str = Field(max_length=40, description='Номер заказа в RetailCRM')
     tariff_code: int = Field(description='Код тарифа. Подробнее см. приложение 1: ' \
                              'https://api-docs.cdek.ru/29923926.html')    
     comment: str = Field(default=None, description='Комментарий к заказу')
-    shipment_point: str = Field(default='MSK2020', max_length=10,
+    shipment_point: str = Field(default='MSK206', max_length=10,
                                 description='Код ПВЗ СДЭК, на который будет производиться ' \
                                     'самостоятельный привоз клиентом. Не может использоваться ' \
                                     'одновременно с from_location')
@@ -60,7 +60,7 @@ class DeliveryOrder(BaseModel):
                                     'одновременно с delivery_point')
     services: List[Service] = Field(default=None,
                                 description='Дополнительные услуги')
-    # packages: List[Package] = Field(description='Список информации по местам (упаковкам). ' \
-    #                                 'Количество мест в заказе может быть от 1 до 255')
-    print: str = Field(default='barcode', description='Необходимость сформировать печатную ' \
-                                     'форму по заказу')
+    packages: List[Package] = Field(default=None, description='Список информации по местам (упаковкам). ' \
+                                    'Количество мест в заказе может быть от 1 до 255')
+    # print: str = Field(default='barcode', description='Необходимость сформировать печатную ' \
+    #                                  'форму по заказу')

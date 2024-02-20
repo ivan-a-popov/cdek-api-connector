@@ -23,4 +23,4 @@ Base.prepare(autoload_with=engine)
 # matching that of the table name.
 Order = Base.classes.order
 User = Base.classes.customer
-Item = Base.classes.orderProduct
+Product = Base.classes.product

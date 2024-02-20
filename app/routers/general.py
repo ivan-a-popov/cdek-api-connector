@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.session import get_db
 from app.database.accessor import get_order
 from app.cdek.util import make_delivery
+from app.cdek.api.order import create_order
 
 common_router = APIRouter(prefix="/delivery", tags=["General"])
 
@@ -22,5 +23,6 @@ async def create_delivery(order_id, db: AsyncSession = Depends(get_db)):
                     'message': 'Delivery type is not supported',
                     }
     else:
-        responce = await make_delivery(order)
+        delivery = await make_delivery(order, db)
+    responce = await create_order(delivery, db)
     return responce

@@ -32,3 +32,5 @@ CDEK_SECRET = "PjLZkKBHEiLK3YsjtNrt3TGNG0ahs3kG"
 
 CRM_API = "YOUR_CRM_API_KEY"
 CRM_URL = "https://example.retailcrm.ru/api/v5"
+
+YADISK_TOKEN = "YOUR_YADISK_TOKEN"

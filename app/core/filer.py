@@ -2,12 +2,12 @@
 import os
 import asyncio
 import yadisk
+from app.core.settings import YADISK_TOKEN
 
-client = yadisk.AsyncClient(token="YOUR_YADISK_TOKEN")
-base_dir = os.path.abspath(os.getcwd())
 
 async def test():
-    async with client:
+    base_dir = os.path.abspath(os.getcwd())
+    async with yadisk.AsyncClient(token=YADISK_TOKEN, session="httpx") as client:
         print('Проверяем, валиден ли токен')
         print(await client.check_token())
         # print('Получаем информацию о диске')

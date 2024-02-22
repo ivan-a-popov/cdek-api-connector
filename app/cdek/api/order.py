@@ -1,4 +1,5 @@
-"""Модуль взаимодействия с API CDEK"""
+"""Модуль взаимодействия с API CDEK, обеспечивающий работу с сущностью "заказ"
+"""
 import json
 from datetime import datetime
 from sqlalchemy import text, update
@@ -9,6 +10,7 @@ from app.cdek.api.auth import ApiService, make_request
 from app.core.logger import log
 from app.core.settings import CDEK_URL
 from app.database.reflection import Order
+from app.cdek.api.barcode import create_barcode
 
 api = ApiService()
 
@@ -28,7 +30,6 @@ async def create_order(q: DeliveryOrder, db: AsyncSession):
         tk_name = "CDEK",
         tk_id = r['entity']['uuid'],
         tk_status = r['requests'][0]['state'],
-        tk_uuid = r['requests'][0]['request_uuid'],
         updated = datetime.now() # r['requests'][0]['date_time']),
     )
     session.add(order)
@@ -49,6 +50,7 @@ async def check_order(order_id, db: AsyncSession):
     if data["tk_status"] == "INVALID":
         data["errors"] = ",".join(str(element) for element in r['requests'][0]['errors'])
     else:
+        data["tk_uuid"] = await create_barcode(row.tk_id)
         data["print_file"] = "it will be photo URL here"
     await session.execute(update(Delivery), [data])
     await session.execute(update(Order),[{"id": int(order_id), "IsUpdated": True}])

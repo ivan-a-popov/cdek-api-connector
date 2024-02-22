@@ -6,7 +6,7 @@ from app.database.session import get_db
 from app.database.accessor import get_order
 from app.cdek.util import make_delivery
 from app.cdek.api.order import create_order
-
+from app.core.filer import test
 common_router = APIRouter(prefix="/delivery", tags=["General"])
 
 @common_router.get("/")
@@ -26,3 +26,9 @@ async def create_delivery(order_id, db: AsyncSession = Depends(get_db)):
         delivery = await make_delivery(order, db)
     responce = await create_order(delivery, db)
     return responce
+
+@common_router.get("/test")
+async def check_delivery():
+    """Тестируем работу с Я.Диск"""
+    r = await test()
+    return r

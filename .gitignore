@@ -12,5 +12,5 @@ migrations
 alembic.ini
 
 # Logs
-logs
+logs/
 *.log

@@ -1,5 +1,5 @@
 """DAL module"""
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.models import Delivery
 from app.database.reflection import Order, Product
@@ -22,3 +22,11 @@ async def get_weight(article, sess: AsyncSession):
         weight = result.scalars().first()
         print(weight)
         return weight
+
+async def save_url(url, uuid, db: AsyncSession):
+    session = db
+    result = await session.execute(
+        text(f'update "delivery_api" set "print_file" = \'{url}\' where "tk_uuid" = \'{uuid}\'')
+        )
+    await session.commit()
+    return result

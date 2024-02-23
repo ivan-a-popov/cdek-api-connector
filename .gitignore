@@ -11,6 +11,8 @@ __pycache__/
 migrations
 alembic.ini
 
-# Logs
+# Logs & temporary files
 logs/
 *.log
+logs/test.log
+temp/

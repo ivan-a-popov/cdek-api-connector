@@ -4,8 +4,11 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.cdek.schemas.delivery import DeliveryOrder
 from app.cdek.api.order import create_order, check_order
+from app.cdek.api.barcode import get_barcode_url
 from app.database.session import get_db
-
+from app.database.accessor import save_url
+from app.cdek.schemas.webhooks import PrintForm
+from app.core.filer import save_file
 
 cdek_router = APIRouter(prefix="/cdek", tags=["CDEK"])
 
@@ -19,3 +22,18 @@ async def create_delivery(body: DeliveryOrder, db: AsyncSession = Depends(get_db
 async def check_delivery(order_id, db: AsyncSession = Depends(get_db)):
     """Проверить статус заявки на доставку"""
     return await check_order(order_id, db)
+
+@cdek_router.post("/barcode")
+async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
+    """Служебный хэндлер для получения вебхуков от СДЕК"""
+    dump = body.model_dump(include={'attributes', 'uuid'})
+    uuid = dump['uuid']
+    url = dump['attributes']['url']
+    link = await save_file(url, uuid)
+    r = await save_url(link, uuid, db)
+    return r
+
+@cdek_router.get("/barcode/{barcode_id}")
+async def get_barcode_download_url(barcode_id):
+    url = await get_barcode_url(barcode_id)
+    return url

@@ -13,6 +13,4 @@ alembic.ini
 
 # Logs & temporary files
 logs/
-*.log
-logs/test.log
 temp/

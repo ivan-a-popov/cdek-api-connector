@@ -37,4 +37,4 @@ async def get_file(url, uuid):
         f.write(r.content)
 
 if __name__ == "__main__":
-    asyncio.run(get_barcode_url("72753031-08f5-4b7d-863d-9d3ff51dbe25"))
+    asyncio.run(get_barcode_url("72753031-00ae-4c7a-86fe-0209a5c060a0"))

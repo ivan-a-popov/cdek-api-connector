@@ -42,7 +42,7 @@ async def check_order(order_id, db: AsyncSession):
     result = await session.execute(text(f'select * from "delivery_api" where "id" = {order_id}'))
     row = result.first()
     log.info(row)
-    response = await make_request(api, "get", f"{CDEK_URL}/orders/{row.tk_id}")
+    response = await make_request(api, "get", f"{CDEK_URL}/orders/?im_number={row.number}")
     r = response.json()
     data = {"id": int(order_id)}
     data["tk_status"] = r['entity']['statuses'][0]['code']

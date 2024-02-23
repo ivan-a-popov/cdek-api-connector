@@ -33,7 +33,7 @@ async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
     r = await save_url(link, uuid, db)
     return r
 
-@cdek_router.get("/barcode/{barcode_id}")
-async def get_barcode_download_url(barcode_id):
+@cdek_router.get("/barcode/{order_id}")
+async def create_barcode(order_id):
     url = await get_barcode_url(barcode_id)
     return url

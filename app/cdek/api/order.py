@@ -50,8 +50,7 @@ async def check_order(order_id, db: AsyncSession):
     if data["tk_status"] == "INVALID":
         data["errors"] = ",".join(str(element) for element in r['requests'][0]['errors'])
     else:
-        data["tk_uuid"] = await create_barcode(row.tk_id)
-        data["print_file"] = "it will be photo URL here"
+        data["tk_uuid"] = await create_barcode(r['entity']['uuid'])
     await session.execute(update(Delivery), [data])
     await session.execute(update(Order),[{"id": int(order_id), "IsUpdated": True}])
     await session.commit()

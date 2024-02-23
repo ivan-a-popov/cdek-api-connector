@@ -2,6 +2,7 @@
 """
 import asyncio
 import json
+import os
 from app.cdek.api.auth import ApiService, make_request
 from app.core.settings import CDEK_URL
 from app.core.logger import log
@@ -23,11 +24,17 @@ async def create_barcode(order_id):
     r = response.json()["entity"]["uuid"]
     return r
 
-async def get_barcode(barcode_id):
+async def get_barcode_url(barcode_id):
     result = await make_request(api, "get", f"{CDEK_URL}/print/barcodes/{barcode_id}")
     url = result.json()["entity"]["url"]
     log.info(url)
-    return r
+    return url
+
+async def get_file(url, uuid):
+    base_dir = os.path.abspath(os.getcwd())
+    r = await make_request(api, "get", url, timeout=20)
+    with open(f'{base_dir}/temp/{uuid}.pdf', 'wb') as f:
+        f.write(r.content)
 
 if __name__ == "__main__":
-    asyncio.run(get_barcode("72753031-08f5-4b7d-863d-9d3ff51dbe25"))
+    asyncio.run(get_barcode_url("72753031-08f5-4b7d-863d-9d3ff51dbe25"))

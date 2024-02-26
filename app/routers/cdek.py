@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.cdek.schemas.delivery import DeliveryOrder
 from app.cdek.api.order import create_order, check_order
-from app.cdek.api.barcode import get_barcode_url
+import app.cdek.api.barcode as barcode
 from app.database.session import get_db
 from app.database.accessor import save_url
 from app.cdek.schemas.webhooks import PrintForm
@@ -23,6 +23,12 @@ async def check_delivery(order_id, db: AsyncSession = Depends(get_db)):
     """Проверить статус заявки на доставку"""
     return await check_order(order_id, db)
 
+@cdek_router.get("/barcode/{order_id}")
+"""Создать печатную форму наклейки"""
+async def create_barcode(order_id, db: AsyncSession = Depends(get_db)):
+    uuid = await barcode.create(order_id, db)
+    return uuid
+
 @cdek_router.post("/barcode")
 async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
     """Служебный хэндлер для получения вебхуков от СДЕК"""
@@ -32,8 +38,3 @@ async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
     link = await save_file(url, uuid)
     r = await save_url(link, uuid, db)
     return r
-
-@cdek_router.get("/barcode/{order_id}")
-async def create_barcode(order_id):
-    url = await get_barcode_url(barcode_id)
-    return url

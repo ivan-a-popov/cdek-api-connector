@@ -7,8 +7,9 @@ from app.cdek.api.order import create_order, check_order
 import app.cdek.api.barcode as barcode
 from app.database.session import get_db
 from app.database.accessor import save_url
-from app.cdek.schemas.webhooks import PrintForm
+from app.cdek.schemas.webhooks import OrderUpdate, PrintForm
 from app.core.filer import save_file
+from app.core.logger import log
 
 cdek_router = APIRouter(prefix="/cdek", tags=["CDEK"])
 
@@ -38,3 +39,10 @@ async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
     link = await save_file(url, uuid)
     r = await save_url(link, uuid, db)
     return r
+
+@cdek_router.post("/update")
+async def order_update(body: OrderUpdate, db: AsyncSession = Depends(get_db)):
+    """Служебный хэндлер для получения вебхуков от СДЕК"""
+    dump = body.model_dump()
+    log.info(dump)
+    return {"message": "OK"}

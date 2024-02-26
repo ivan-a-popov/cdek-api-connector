@@ -37,14 +37,17 @@ async def check_order(order_id, session: AsyncSession):
     """Check delivery order status"""
     result = await session.execute(text(f'select * from "delivery_api" where "id" = {order_id}'))
     row = result.first()
-    response = await make_request(api, "get", f"{CDEK_URL}/orders/?im_number={row.number}")
-    r = response.json()
-    data = {"id": int(order_id)}
-    data["tk_status"] = r['entity']['statuses'][0]['code']
-    data["updated"] = datetime.now() # response.json()['entity']['statuses'][0]['date_time']
-    if data["tk_status"] == "INVALID":
-        data["errors"] = ",".join(str(element) for element in r['requests'][0]['errors'])
-    await session.execute(update(Delivery), [data])
-    await session.execute(update(Order),[{"id": int(order_id), "IsUpdated": True}])
-    await session.commit()
-    return response.json()
+    if row:
+        response = await make_request(api, "get", f"{CDEK_URL}/orders/?im_number={row.number}")
+        r = response.json()
+        data = {"id": int(order_id)}
+        data["tk_status"] = r['entity']['statuses'][0]['code']
+        data["updated"] = datetime.now() # response.json()['entity']['statuses'][0]['date_time']
+        if data["tk_status"] == "INVALID":
+            data["errors"] = ",".join(str(element) for element in r['requests'][0]['errors'])
+        await session.execute(update(Delivery), [data])
+        await session.execute(update(Order),[{"id": int(order_id), "IsUpdated": True}])
+        await session.commit()
+        return r
+    else:
+        return None

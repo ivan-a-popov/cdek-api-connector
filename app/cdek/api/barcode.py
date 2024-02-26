@@ -20,7 +20,7 @@ async def create(order_id, session):
 	],
     "copy_count": 1,
     "format": "A7"
-}
+    }
     payload = json.dumps(data, default=str, ensure_ascii=False)
     response = await make_request(api, "post", f"{CDEK_URL}/print/barcodes", content=payload)
     log.info(response.text)
@@ -40,4 +40,4 @@ async def get_file(url, uuid):
         f.write(r.content)
 
 if __name__ == "__main__":
-    asyncio.run(get_url("72753031-b281-4270-99b6-6f0ba3792c66"))
+    asyncio.run(get_url("72753031-1f5c-450f-bab3-32ba118d96e8"))

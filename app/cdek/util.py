@@ -1,8 +1,6 @@
-"""34092 -- заказ с адресом
-34078 -- заказ с ПВЗ
-"""
+"""Helper functions for CDEK"""
 import re
-from app.core.logger import log
+# from app.core.logger import log
 
 from app.retailcrm.api import get_crm_info
 from app.database.accessor import get_weight

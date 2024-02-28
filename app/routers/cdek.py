@@ -1,5 +1,5 @@
 """CDEK Routers"""
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.cdek.schemas.delivery import DeliveryOrder
@@ -9,7 +9,9 @@ from app.database.session import get_db
 from app.database.accessor import save_url
 from app.cdek.schemas.webhooks import OrderUpdate, PrintForm
 from app.core.filer import save_file
+from app.retailcrm.webhook import forward
 from app.core.logger import log
+
 
 cdek_router = APIRouter(prefix="/cdek", tags=["CDEK"])
 
@@ -41,8 +43,10 @@ async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
     return r
 
 @cdek_router.post("/update")
-async def order_update(body: OrderUpdate, db: AsyncSession = Depends(get_db)):
+async def order_update(request: Request, body: OrderUpdate, db: AsyncSession = Depends(get_db)):
     """Служебный хэндлер для получения вебхуков от СДЕК"""
-    dump = body.model_dump()
+    r = await forward(request)
+    log.info(r.text)
+    dump = body.model_dump(include={'attributes', 'uuid'})
     log.info(dump)
     return {"message": "OK"}

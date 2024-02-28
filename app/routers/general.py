@@ -25,5 +25,5 @@ async def create_delivery(order_id, db: AsyncSession = Depends(get_db)):
                     }
     else:
         delivery = await make_delivery(order, db)
-    responce = await create_order(delivery, db)
+        responce = await create_order(delivery, db)
     return responce

@@ -1,5 +1,5 @@
-"""CDEK Routers"""
-from fastapi import APIRouter
+"""Common Routers"""
+from fastapi import APIRouter, HTTPException
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.session import get_db
@@ -20,9 +20,7 @@ async def create_delivery(order_id, db: AsyncSession = Depends(get_db)):
     """Простое создание доставки"""
     order = await get_order(order_id, db)
     if order.DeliveryTypeId != 21:
-        responce = {'status': 'Error',
-                    'message': 'Delivery type is not supported',
-                    }
+        raise HTTPException(status_code=422, detail="Delivery type is not supported")
     else:
         delivery = await make_delivery(order, db)
         responce = await create_order(delivery, db)

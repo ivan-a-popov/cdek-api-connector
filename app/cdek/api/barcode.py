@@ -2,20 +2,22 @@
 import asyncio
 import json
 import os
+from tabnanny import check
 from sqlalchemy import text
 from app.cdek.api.auth import ApiService, make_request
+from app.cdek.api.order import check_order
 from app.core.settings import CDEK_URL
 from app.core.logger import log
+
 
 api = ApiService()
 
 async def create(order_id, session):
-    result = await session.execute(text(f'select * from "delivery_api" where "id" = {order_id}'))
-    row = result.first()
+    result = await check_order(order_id, session)
     data = {
     "orders": [
         {
-            "order_uuid": f"{row.tk_id}"
+            "order_uuid": f"{result}"
 		}
 	],
     "copy_count": 1,

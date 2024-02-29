@@ -1,5 +1,5 @@
 """DAL module"""
-from sqlalchemy import select, text
+from sqlalchemy import insert, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.models import Delivery
 from app.database.reflection import Order, Product
@@ -30,3 +30,7 @@ async def save_url(url, uuid, db: AsyncSession):
         )
     await session.commit()
     return result
+
+async def save_delivery(data, session: AsyncSession):
+    await session.execute(insert(Delivery), data)
+    await session.commit()

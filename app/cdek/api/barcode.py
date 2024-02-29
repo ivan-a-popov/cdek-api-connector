@@ -4,18 +4,20 @@ import json
 import os
 from sqlalchemy import text
 from app.cdek.api.auth import ApiService, make_request
+from app.cdek.api.order import check_order
 from app.core.settings import CDEK_URL
 from app.core.logger import log
+from app.database.accessor import save_delivery
+
 
 api = ApiService()
 
 async def create(order_id, session):
-    result = await session.execute(text(f'select * from "delivery_api" where "id" = {order_id}'))
-    row = result.first()
+    result = await check_order(order_id, session)
     data = {
     "orders": [
         {
-            "order_uuid": f"{row.tk_id}"
+            "order_uuid": f"{result}"
 		}
 	],
     "copy_count": 1,
@@ -25,6 +27,9 @@ async def create(order_id, session):
     response = await make_request(api, "post", f"{CDEK_URL}/print/barcodes", content=payload)
     log.info(response.text)
     r = response.json()["entity"]["uuid"]
+    data = {"id": int(order_id)}
+    data["tk_uuid"] = r
+    await save_delivery(data, session)
     return r
 
 async def get_url(barcode_id):

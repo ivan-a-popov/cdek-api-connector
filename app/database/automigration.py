@@ -4,7 +4,7 @@ from alembic import autogenerate
 from alembic.operations import ops
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.ext.asyncio import create_async_engine
-import app.settings as settings
+import app.core.settings as settings
 
 Base = declarative_base()
 metadata = MetaData()

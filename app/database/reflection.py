@@ -24,3 +24,4 @@ Base.prepare(autoload_with=engine)
 Order = Base.classes.order
 User = Base.classes.customer
 Product = Base.classes.product
+Status = Base.classes.innerStatus

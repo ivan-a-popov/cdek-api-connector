@@ -1,8 +1,8 @@
 """Helper functions to quickly check DB queries"""
 import asyncio
-from sqlalchemy import select, text
+from sqlalchemy import insert, select, text
 from app.database.session import async_engine
-from app.database.reflection import metadata
+from app.database.reflection import metadata, Status
 
 
 async def test_core():
@@ -37,7 +37,16 @@ async def test_orm():
         address = result.fetchone()
         print(address)
 
+async def test():
+    async with async_engine.connect() as connection:
+        print("Connected successfully!")
+        await connection.execute(
+            insert(Status), {"id": 9, "code": "shipmentReady", "name": "Готов к отгрузке"}
+            )
+        await connection.commit()
+
 
 if __name__ == '__main__':
     # asyncio.run(test_orm())
-    asyncio.run(test_core())
+    # asyncio.run(test_core())
+    asyncio.run(test())

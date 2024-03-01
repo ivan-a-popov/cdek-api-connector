@@ -45,6 +45,7 @@ async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
 @cdek_router.post("/update")
 async def order_update(request: Request, body: OrderUpdate, db: AsyncSession = Depends(get_db)):
     """Служебный хэндлер для получения вебхуков от СДЕК"""
+    log.info(request)
     r = await forward(request)
     log.info(r.text)
     dump = body.model_dump(include={'attributes', 'uuid'})

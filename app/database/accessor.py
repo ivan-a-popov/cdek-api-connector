@@ -7,10 +7,18 @@ from app.database.reflection import Order, Product
 from app.core.logger import log
 
 
-async def get_order(order_id, sess: AsyncSession):
-    """Fetch order from DB"""
+async def get_order_by_id(order_id, sess: AsyncSession):
+    """Fetch order from DB by inner id"""
     async with sess as session:
         stmt = select(Order).where(Order.id == int(order_id))
+        result = await session.execute(stmt)
+        order = result.scalars().first()
+        return order
+
+async def get_order_by_number(number, sess: AsyncSession):
+    """Fetch order from DB by RetalCRM number"""
+    async with sess as session:
+        stmt = select(Order).where(Order.numberOrder == number)
         result = await session.execute(stmt)
         order = result.scalars().first()
         return order

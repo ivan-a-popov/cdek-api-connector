@@ -6,7 +6,7 @@ from app.cdek.schemas.delivery import DeliveryOrder
 from app.cdek.api.order import create_order, check_order
 import app.cdek.api.barcode as barcode
 from app.database.session import get_db
-from app.database.accessor import save_url
+from app.database.accessor import get_order_by_number, save_delivery, save_url
 from app.cdek.schemas.webhooks import OrderUpdate, PrintForm
 from app.core.filer import save_file
 from app.retailcrm.webhook import forward
@@ -45,8 +45,16 @@ async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
 @cdek_router.post("/update")
 async def order_update(request: Request, body: OrderUpdate, db: AsyncSession = Depends(get_db)):
     """Служебный хэндлер для получения вебхуков от СДЕК"""
-    r = await forward(request)
-    log.info(r.text)
+    await forward(request)
+    info = await request.body()
+    log.info(info)
     dump = body.model_dump(include={'attributes', 'uuid'})
-    log.info(dump)
+    order = await get_order_by_number(dump['attributes']['number'], db)
+    data = {"id": order.id}
+    data["tk_id"] = dump['uuid']
+    data["number"] = order.numberOrder
+    data["crm_id"] = order.CrmId
+    data["tk_name"] = "CDEK"
+    data["tk_status"] = dump['attributes']['code']
+    await save_delivery(data, db)
     return {"message": "OK"}

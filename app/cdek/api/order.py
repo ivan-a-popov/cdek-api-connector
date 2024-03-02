@@ -9,7 +9,7 @@ from app.cdek.schemas.delivery import DeliveryOrder
 from app.cdek.api.auth import ApiService, make_request
 from app.core.logger import log
 from app.core.settings import CDEK_URL
-from app.database.accessor import get_order, save_delivery
+from app.database.accessor import get_order_by_id, save_delivery
 
 api = ApiService()
 
@@ -48,7 +48,7 @@ async def check_order(order_id, session: AsyncSession):
         await save_delivery(data, session)
         return row.tk_id
     else:
-        order = await get_order(order_id, session)
+        order = await get_order_by_id(order_id, session)
         if order.DeliveryTypeId != 21:
             raise HTTPException(status_code=422, detail="Delivery type is not supported")
         else:

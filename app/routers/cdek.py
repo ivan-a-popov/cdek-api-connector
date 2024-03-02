@@ -46,8 +46,7 @@ async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
 async def order_update(request: Request, body: OrderUpdate, db: AsyncSession = Depends(get_db)):
     """Служебный хэндлер для получения вебхуков от СДЕК"""
     await forward(request)
-    info = await request.body()
-    log.info(info)
+    log.info(body)
     dump = body.model_dump(include={'attributes', 'uuid'})
     order = await get_order_by_number(dump['attributes']['number'], db)
     data = {"id": order.id}

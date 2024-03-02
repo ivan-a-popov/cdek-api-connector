@@ -48,6 +48,7 @@ async def order_update(request: Request, body: OrderUpdate, db: AsyncSession = D
     await forward(request)
     log.info(body)
     dump = body.model_dump(include={'attributes', 'uuid'})
+    log.info(dump['attributes']['number'])
     order = await get_order_by_number(dump['attributes']['number'], db)
     data = {"id": order.id}
     data["tk_id"] = dump['uuid']

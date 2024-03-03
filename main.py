@@ -1,4 +1,4 @@
-"""Main application file. The magic starts here."""
+"""Main application file. The whole magic starts here."""
 from fastapi import FastAPI, APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError

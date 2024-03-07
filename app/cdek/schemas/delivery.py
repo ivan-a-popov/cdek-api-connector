@@ -22,7 +22,7 @@ class DeliveryOrder(BaseModel):
     tariff_code: int = Field(description='Код тарифа. Подробнее см. приложение 1: ' \
                              'https://api-docs.cdek.ru/29923926.html')    
     comment: str = Field(default=None, description='Комментарий к заказу')
-    shipment_point: str = Field(default='MSK206', max_length=10,
+    shipment_point: str = Field(default='MSK2020', max_length=10,
                                 description='Код ПВЗ СДЭК, на который будет производиться ' \
                                     'самостоятельный привоз клиентом. Не может использоваться ' \
                                     'одновременно с from_location')

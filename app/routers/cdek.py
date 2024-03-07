@@ -35,6 +35,7 @@ async def create_barcode(order_id, db: AsyncSession = Depends(get_db)):
 @cdek_router.post("/barcode")
 async def recieve_barcode(body: PrintForm, db: AsyncSession = Depends(get_db)):
     """Служебный хэндлер для получения вебхуков от СДЕК"""
+    log.info(body)
     dump = body.model_dump(include={'attributes', 'uuid'})
     uuid = dump['uuid']
     url = dump['attributes']['url']

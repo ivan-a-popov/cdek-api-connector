@@ -56,10 +56,14 @@ async def check_order(order_id, session: AsyncSession):
                 api, "get", f"{CDEK_URL}/orders/?im_number={order.numberOrder}"
                 )
             r = response.json()
-            data["tk_status"] = r['entity']['statuses'][0]['code']
-            data["tk_id"] = r['entity']['uuid']
-            data["number"] = order.numberOrder
-            data["crm_id"] = order.CrmId
-            data["tk_name"] = "CDEK"
-            await save_delivery(data, session)
-            return data["tk_id"]
+            try:
+                data["tk_status"] = r['entity']['statuses'][0]['code']
+                data["tk_id"] = r['entity']['uuid']
+                data["number"] = order.numberOrder
+                data["crm_id"] = order.CrmId
+                data["tk_name"] = "CDEK"
+                await save_delivery(data, session)
+                return data["tk_id"]
+            except KeyError as e:
+                raise HTTPException(status_code=404, detail="Delivery order not found") from e
+            

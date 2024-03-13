@@ -69,5 +69,7 @@ async def check_order(order_id, session: AsyncSession):
                 await save_delivery(data, session)
                 return data["tk_id"]
             except KeyError as e:
-                raise HTTPException(status_code=404, detail="Delivery order not found") from e
+                raise HTTPException(
+                    status_code=404, detail="Delivery order not found in CDEK"
+                    ) from e
             

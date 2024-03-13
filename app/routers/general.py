@@ -14,7 +14,9 @@ common_router = APIRouter(prefix="/delivery", tags=["General"])
 async def create_delivery(order_id, db: AsyncSession = Depends(get_db)):
     """Простое создание доставки"""
     order = await get_order_by_id(order_id, db)
-    if order.DeliveryTypeId != 21:
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found in database")
+    elif order.DeliveryTypeId != 21:
         raise HTTPException(status_code=422, detail="Delivery type is not supported")
     else:
         delivery = await make_delivery(order, db)

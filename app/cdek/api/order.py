@@ -21,7 +21,7 @@ async def create_order(q: DeliveryOrder, session: AsyncSession):
     responce = await make_request(api, "post", f"{CDEK_URL}/orders", content=payload)
     r = responce.json()
     log.info(r)
-    data = Delivery(
+    order = Delivery(
         id = int(q.wms_id),
         crm_id = q.crm_id,
         number = (q.number),
@@ -31,12 +31,12 @@ async def create_order(q: DeliveryOrder, session: AsyncSession):
         updated = datetime.now() # r['requests'][0]['date_time']),
     )
     try:
-        await save_delivery(data, session)
-        return data
+        session.add(order)
+        await session.commit()
+        return order
     except KeyError as e:
         raise HTTPException(
-            status_code=409, detail="Delivery order already exists in database"
-            ) from e
+            status_code=409, detail="Delivery order already exists in database") from e
 
 async def check_order(order_id, session: AsyncSession):
     """Check delivery order status"""

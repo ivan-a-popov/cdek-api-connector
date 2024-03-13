@@ -10,12 +10,7 @@ from app.cdek.api.order import create_order
 
 common_router = APIRouter(prefix="/delivery", tags=["General"])
 
-@common_router.get("/")
-async def check_delivery():
-    """Получение информации обо всех активных доставках"""
-    return {"message": "Not implemented"}
-
-@common_router.post("/{order_id}")
+@common_router.get("/{order_id}")
 async def create_delivery(order_id, db: AsyncSession = Depends(get_db)):
     """Простое создание доставки"""
     order = await get_order_by_id(order_id, db)

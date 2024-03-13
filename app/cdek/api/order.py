@@ -1,7 +1,7 @@
 """API CDEK module, working with 'order' entity"""
 import json
 from datetime import datetime
-from sqlite3 import IntegrityError
+from asyncpg import UniqueViolationError
 from fastapi import HTTPException
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -35,7 +35,7 @@ async def create_order(q: DeliveryOrder, session: AsyncSession):
         session.add(order)
         await session.commit()
         return order
-    except IntegrityError as e:
+    except UniqueViolationError as e:
         raise HTTPException(
             status_code=409, detail="Delivery order already exists in database") from e
 

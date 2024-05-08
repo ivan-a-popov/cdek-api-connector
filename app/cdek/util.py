@@ -52,6 +52,12 @@ async def make_delivery(order, db):
         delivery.delivery_point = str(pvz_id)
     else:
         delivery.to_location = {"address": order.address}
+    if crm_info["order"]["countryIso"] != "RU":
+        delivery.seller = {
+            "name": "Example Seller",
+            "phone": "+70000000000",
+            "address": "Example City, Example Street, 1",
+        }
     delivery.packages = [{
         "number": "1",
         "weight": crm_info["order"]["weight"],

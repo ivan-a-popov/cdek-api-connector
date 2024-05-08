@@ -4,7 +4,7 @@ from typing import List
 from pydantic import BaseModel, Field
 from app.cdek.schemas.location import Location
 from app.cdek.schemas.money import Money, Threshold
-from app.cdek.schemas.contact import Recipient, Seller
+from app.cdek.schemas.person import Recipient, Seller
 from app.cdek.schemas.package import Package
 
 

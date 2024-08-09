@@ -11,7 +11,7 @@ from app.cdek.api.auth import ApiService
 api = ApiService()
 app = FastAPI(title="Delivery Connector API", debug=True)
 
-main_router = APIRouter(prefix="/api")
+main_router = APIRouter(prefix="/v1")
 main_router.include_router(common_router)
 main_router.include_router(cdek_router)
 app.include_router(main_router)

@@ -1,4 +1,4 @@
-"""TestAPI token YOUR_YADISK_TOKEN"""
+"""Upload print forms to Yandex Disk."""
 import os
 import asyncio
 import yadisk

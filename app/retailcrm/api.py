@@ -1,18 +1,4 @@
-"""
-Позвонить за день до доставки(желательно)
-Спасибо ???? 
-[DB]
-Тип доставки: ПВЗ СДЭК
-ПВЗ ID MSK202
-ПВЗ адрес: Example Region, Example City, Example Street, 1
-Срок доставки: 5 дней
-Стоимость доставки: 312р.
-[/DB]
-
-100001 -- pickup order
-100002 -- courier order
-"""
-
+"""RetailCRM client."""
 import httpx
 from app.core.settings import CRM_API, CRM_URL
 

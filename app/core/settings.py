@@ -1,6 +1,9 @@
 """File with settings and configs for the project"""
 import os
+from dotenv import load_dotenv
 from sqlalchemy.engine import URL
+
+load_dotenv()
 
 
 DATABASE_IP = os.getenv("DATABASE_IP", "127.0.0.1")
